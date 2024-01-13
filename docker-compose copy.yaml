@@ -1,0 +1,20 @@
+version: '3'
+services:
+
+    orders:
+        build:
+            context: ./
+            dockerfile: ./apps/orders/Dockerfile
+            target: development
+        command: yarn start:dev
+        env_file: ./apps/orders/.env
+        ports:
+            - "3000:3000"
+        networks:
+            - mongonet
+        volumes:
+          - .:/usr/src/app
+          - /usr/src/app/node_modules
+
+networks:
+  mongonet:

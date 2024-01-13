@@ -1,0 +1,18 @@
+# versioning and metadata
+.git
+.gitignore
+.history
+.dockerignore
+
+# build dependencies
+dist.do
+node_modules
+
+# environment variables
+*.env
+
+# misc
+.DS_Store
+.eslintrc.js
+.prettierrc
+README.md

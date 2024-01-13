@@ -4,6 +4,66 @@
 version: '2'
 
 services:
+  orders:
+    build:
+      context: ./
+      dockerfile: ./apps/orders/Dockerfile
+      target: development
+    command: yarn start:dev orders
+    env_file: ./apps/orders/.env
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary
+      - mongodb-arbiter
+      - billing
+      - rabbitmq
+      - auth
+
+  billing:
+    build:
+      context: ./
+      dockerfile: ./apps/billing/Dockerfile
+      target: development
+    command: yarn start:dev billing
+    env_file: ./apps/billing/.env
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary
+      - mongodb-arbiter
+      - auth
+      - rabbitmq
+  auth:
+    build:
+      context: ./
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: yarn start:dev auth
+    env_file: ./apps/auth/.env
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary
+      - mongodb-arbiter
+      - rabbitmq    
+  rabbitmq:
+    image: rabbitmq:3.12.12-management
+    ports:
+      - '5672:5672'
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+        
   mongodb-primary:
     image: docker.io/bitnami/mongodb:7.0
     environment:
@@ -40,3 +100,4 @@ services:
 volumes:
   mongodb_master_data:
     driver: local
+  rabbitmq_data:

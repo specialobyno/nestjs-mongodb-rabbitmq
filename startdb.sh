@@ -1,7 +1,5 @@
 #!/bin/bash
 
-docker-compose up --remove-orphans
+docker compose down
 
-sleep 5
-
-docker exec mongo1 /scripts/rs-init.sh
+docker-compose up --build -V --remove-orphans -d
